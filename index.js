@@ -42,7 +42,22 @@ async function run() {
       res.send(result);
     });
 
-    
+    //Updet Item
+    // app.put('/car:id', async (re, res) => {
+    //   const id = req.params.id;
+    //   const updatedItem = req.body;
+    //   const query = { _id: ObjectId(id) };
+    //   const options={upsert:true};
+    //   const updatedDoc={
+    //     $set:{
+    //       name: updatedItem.name,
+    //       price: updatedItem.price,
+    //       quantity: updatedItem.quantity
+    //     }
+    //   };
+    //   const result=await carCollection.updateOne(query, options, updatedDoc);
+    //   res.send(result);
+    // })
 
     // Delete product
     app.delete('/car/:id', async (req, res) => {
