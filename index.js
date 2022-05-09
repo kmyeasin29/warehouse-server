@@ -1,9 +1,9 @@
 const express = require('express');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
-const app=express();
+const app = express();
 require('dotenv').config()
-const port =process.env.PORT || 5000;
+const port = process.env.PORT || 5000;
 
 //carLeader
 //GOYiMjghXPVxsfmA
@@ -16,61 +16,70 @@ app.use(express.json());
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.cwbwb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-async function run(){
-  try{
+async function run() {
+  try {
     await client.connect();
     const carCollection = client.db("carLeader").collection("cars");
     app.get("/car", async (req, res) => {
-      const query={}
+      const query = {}
       const cursor = carCollection.find(query);
       const cars = await cursor.toArray();
 
       res.send(cars);
     });
 
-    app.get('/car/:id', async(req, res)=>{
-      const id=req.params.id;
-      const query={_id:ObjectId(id)};
-      const service=await carCollection.findOne(query);
+    app.get('/car/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const service = await carCollection.findOne(query);
       res.send(car)
     })
 
     // Upload Product
-    app.post('/car', async(req, res)=>{
-      const item=req.body;
-      const result=await carCollection.insertOne(item);
+    app.post('/car', async (req, res) => {
+      const item = req.body;
+      const result = await carCollection.insertOne(item);
       res.send(result);
     });
 
-    // Dele product
-    app.delete('/car/:id', async(req, res)=>{
-      const id=req.params.id;
-      const query={_id: ObjectId(id)};
-      const result=await carCollection.deleteOne(query);
+    //Updet Item
+    // app.put('/car:id', async (re, res) => {
+    //   const id = req.params.id;
+    //   const updatedItem = req.body;
+    //   const query = { _id: ObjectId(id) };
+    //   const options={upsert:true};
+    //   const updatedDoc={
+    //     $set:{
+    //       name: updatedItem.name,
+    //       price: updatedItem.price,
+    //       quantity: updatedItem.quantity
+    //     }
+    //   };
+    //   const result=await carCollection.updateOne(query, options, updatedDoc);
+    //   res.send(result);
+    // })
+
+    // Delete product
+    app.delete('/car/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await carCollection.deleteOne(query);
       res.send(result);
     })
 
   }
-  finally{
+  finally {
 
   }
 }
 run().catch(console.dir)
 
-// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-// client.connect(err => {
-//   const collection = client.db("test").collection("devices");
-//   console.log('mongo');
-//   // perform actions on the collection object
-//   client.close();
-// });
 
 
-
-app.get('/', (req, res)=>{
-    res.send('car leader is running')
+app.get('/', (req, res) => {
+  res.send('car leader is running')
 });
 
-app.listen(port, ()=>{
-    console.log('car leader is listening');
+app.listen(port, () => {
+  console.log('car leader is listening');
 })
